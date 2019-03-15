@@ -15,8 +15,7 @@ images_array = [
   "img/elon2.jpg"
 ]
 
-width = 224
-height = 224
+size = 224
 
 model = resnet50.ResNet50()
 
@@ -25,7 +24,7 @@ def dog_detector(data):
   return ((prediction <= 268) & (prediction >= 151))
 
 def run_model(img_path):
-  img = image.load_img(path=img_path, target_size=(width, height))
+  img = image.load_img(path=img_path, target_size=(size, size))
   img = image.img_to_array(img)
   img = numpy.expand_dims(img, axis=0)
   img = resnet50.preprocess_input(img)

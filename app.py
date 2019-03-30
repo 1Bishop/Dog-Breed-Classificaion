@@ -1,34 +1,30 @@
-from flask import Flask, request
+import os
+from flask import Flask, request, redirect
+from werkzeug.utils import secure_filename
 app = Flask(__name__)
 
-from PIL import Image
-import numpy
 
-from keras.applications import resnet50
-from keras.preprocessing import image
+UPLOAD_FOLDER = './uploads'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-size = 224, 224
-
-model = resnet50.ResNet50()
-
-def dog_detector(data):
-  prediction = numpy.argmax(data)
-  return ((prediction <= 268) & (prediction >= 151))
+from findDogForApi import *
 
 
 @app.route("/", methods=["POST"])
 def home():
-    img = Image.open(request.files['file'])
+  file = request.files['file']
+  filename = secure_filename(file.filename)
+  file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+  img_path = "uploads/" + filename
+  print(img_path)
+  return run_model(img_path)
 
-    img = img.load_img(img, target_size=(size, size))
 
-    img = image.img_to_array(img)
-    img = numpy.expand_dims(img, axis=0)
-    img = resnet50.preprocess_input(img)
-    img_pred = model.predict(img)
 
-    if dog_detector(img_pred):
-      return "success"
-    else:
-      return "not dog"
-
+@app.route("/upload", methods=["POST"])
+def upload():
+  file = request.files['file']
+  filename = secure_filename(file.filename)
+  file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+  # return redirect(url_for('uploaded_file', filename=filename))
+  return filename

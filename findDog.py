@@ -45,4 +45,5 @@ def display_prediction(pred_class):
 
 
 # for img in images_array:
-#   run_model(img)
+  # run_model(img)
+run_model('uploads/dog.jpg')

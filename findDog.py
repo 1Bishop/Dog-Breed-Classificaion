@@ -44,5 +44,5 @@ def display_prediction(pred_class):
       print(" - {}: {:2f} likelihood".format(name, likelihood))
 
 
-for img in images_array:
-  run_model(img)
+# for img in images_array:
+#   run_model(img)
